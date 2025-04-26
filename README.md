@@ -1,8 +1,12 @@
+[![Choaib ELMADI - Bare Metal Programming](https://img.shields.io/badge/Choaib_ELMADI-Bare_Metal_Programming-8800dd)](https://elmadichoaib.vercel.app) ![Status - Learning](https://img.shields.io/badge/Status-Learning-2bd729) ![Platform - STM32](https://img.shields.io/badge/Platform-STM32-f7d620)
+
 # Bare Metal Programming
 
 `Bare metal programming` refers to writing software that runs directly on the hardware of a microcontroller without the support of an operating system or IDE. It involves manually managing hardware resources, such as memory, peripherals, and interrupts. This approach allows for more control over the hardware and is often used in embedded systems where performance and efficiency are critical.
 
-## C Program Compilation Process
+## C Programs Compilation Process
+
+When we write a C program for a microcontroller, it goes through several steps before it can actually run on the hardware. This process includes compiling the code, assembling it, linking it into an executable, and finally flashing it onto the microcontroller.
 
 <div align="center">
 
@@ -14,7 +18,7 @@ graph LR
 
     subgraph Building...[⚒️ Building...]
         Compiler --> Assembler["Assembler<br>(.o files)"]
-        Assembler --> Linker["Linker<br>(.exe, .elf files)"]
+        Assembler --> Linker["Linker<br>(.bin, .exe, .elf files)"]
     end
 
     subgraph Flashing...[📂 Flashing...]
@@ -57,6 +61,12 @@ graph LR
     linkStyle 3 stroke:#FE7749,stroke-width:2px;
 ```
 
+</div>
+
+Here's a quick overview of the main stages in the build process and what each one does.
+
+<div align="center">
+
 | Preprocessor                           | Compiler                 | Assembler                        | Linker                     |
 | -------------------------------------- | ------------------------ | -------------------------------- | -------------------------- |
 | - Remove comments                      | - Generate assembly code | - Generate object (binary) files | - Combine object files     |
@@ -65,3 +75,39 @@ graph LR
 | - Produce translation unit (`.i file`) |                          |                                  |                            |
 
 </div>
+
+## Cross Compilation and Toolchains
+
+`Cross-compilation` is a process in which the cross-toolchain runs on the host machine (your PC) and creates executables that run on different machine (ARM).
+
+`Cross-toolchain` is a collection of binaries which allows you to compile, assemble and link your applications. It contains binaries to debug the application on the target and analyze executables:
+
+- Disassemble executables
+- Dissect different sections of an executable
+- Extract symbol and size information
+- Convert executables to other formats (bin, ihex, ...)
+- Provide C standard libraries
+
+The toolchain we will use is GCC (`GNU Compiler Collection`), a free and open-source tool for ARM embedded processors.
+
+### Download the GCC Toolchain
+
+If you have installed STM32CubeIDE, the GCC toolchain is already installed with it.
+
+If not, you can download it manually from this link: [ARM GNU Toolchain Downloads](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
+
+I am using a Windows machine, so I installed the `arm-none-eabi` version.
+
+<div align="center">
+
+![ARM GCC and GDB Versions](./Images/arm-none-eabi-gcc-gdb-versions.png)
+
+</div>
+
+### Important Cross Toolchain Binaries
+
+- Compiler, Assembler, Linker `⟶` arm-none-eabi-gcc
+- Assembler &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `⟶` arm-none-eabi-as
+- Linker &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `⟶` arm-none-eabi-ld
+- ELF File Analyzers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `⟶` arm-none-eabi-objdump, arm-none-eabi-readelf, arm-none-eabi-nm
+- Format Converter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `⟶` arm-none-eabi-objcopy
