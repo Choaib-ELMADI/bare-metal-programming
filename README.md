@@ -67,12 +67,12 @@ Here's a quick overview of the main stages in the build process and what each on
 
 <div align="center">
 
-| Preprocessor                           | Compiler                 | Assembler                        | Linker                     |
-| -------------------------------------- | ------------------------ | -------------------------------- | -------------------------- |
-| - Remove comments                      | - Generate assembly code | - Generate object (binary) files | - Combine object files     |
-| - Replace macros                       |                          |                                  | - Link libraries           |
-| - Include header files                 |                          |                                  | - Produce final executable |
-| - Produce translation unit (`.i file`) |                          |                                  |                            |
+| Preprocessor                           | Compiler                 | Assembler                           | Linker                     |
+| -------------------------------------- | ------------------------ | ----------------------------------- | -------------------------- |
+| - Remove comments                      | - Generate assembly code | - Generate relocatable object files | - Combine object files     |
+| - Replace macros                       |                          |                                     | - Link libraries           |
+| - Include header files                 |                          |                                     | - Produce final executable |
+| - Produce translation unit (`.i file`) |                          |                                     |                            |
 
 </div>
 
@@ -111,3 +111,23 @@ I am using a Windows machine, so I installed the `arm-none-eabi` version.
 - Linker &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `⟶` arm-none-eabi-ld
 - ELF File Analyzers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `⟶` arm-none-eabi-objdump, arm-none-eabi-readelf, arm-none-eabi-nm
 - Format Converter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `⟶` arm-none-eabi-objcopy
+
+### Basic Compilation Commands
+
+The following command compiles and assembles the `main.c` file without linking, and outputs a relocatable object file `main.o`:
+
+```bash
+arm-none-eabi-gcc -c main.c -o main.o
+```
+
+This next command does the same thing but specifies the target ARM processor (`cortex-m4`) and tells the compiler to generate Thumb instruction set code:
+
+```bash
+arm-none-eabi-gcc -c -mcpu=cortex-m4 -mthumb main.c -o main.o
+```
+
+This command generates only the assembly code from `main.c`, without assembling it into an object file:
+
+```bash
+arm-none-eabi-gcc -S -mcpu=cortex-m4 -mthumb main.c -o main.s
+```
