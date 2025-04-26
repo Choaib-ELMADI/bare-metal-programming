@@ -131,3 +131,31 @@ This command generates only the assembly code from `main.c`, without assembling 
 ```bash
 arm-none-eabi-gcc -S -mcpu=cortex-m4 -mthumb main.c -o main.s
 ```
+
+### Automating Compilation with a Makefile
+
+Instead of typing long commands every time, you can automate the process using a simple `Makefile`:
+
+```Makefile
+CC=arm-none-eabi-gcc
+MACH=cortex-m4
+CFLAGS= -c -mcpu=$(MACH) -mthumb -std=gnu11 -O0
+
+# TARGET: DEPENDENCY
+main.o: main.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+# $^ --> dependencies (main.c)
+# $@ --> target (main.o)
+
+```
+
+Now, just typing:
+
+```bash
+make
+```
+
+Will automatically compile `main.c` into `main.o` based on the rules you defined!
+
+If you want to dive deeper into build systems like Makefiles, CMake, and how projects are organized and automated, check out this repository: [Getting Started with CMake](https://github.com/Choaib-ELMADI/getting-started-with-cmake)
