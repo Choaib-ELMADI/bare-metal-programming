@@ -147,7 +147,6 @@ main.o: main.c
 
 # $^ --> dependencies (main.c)
 # $@ --> target (main.o)
-
 ```
 
 Now, just typing:
@@ -159,3 +158,55 @@ make
 Will automatically compile `main.c` into `main.o` based on the rules you defined!
 
 If you want to dive deeper into build systems like Makefiles, CMake, and how projects are organized and automated, check out this repository: [Getting Started with CMake](https://github.com/Choaib-ELMADI/getting-started-with-cmake)
+
+## Analyzing Build Output Files
+
+When we compile our C programs, different types of files are generated during the build process. These files serve different purposes and understanding them is very important in bare metal programming.
+
+### Analyzing `.o` Relocatable Object Files
+
+After compiling a C file (without linking), the compiler generates a `.o` file. This is a relocatable object file in the ELF format (`Executable and Linkable Format`) that contains different sections:
+
+- `.text`: contains the actual program instructions.
+- `.data`: contains initialized data.
+- `.bss`: contains uninitialized data.
+- `.rodata`: contains read-only data.
+- `.comment`: metadata added by the compiler.
+- `.ARM.attributes`: metadata added by the compiler.
+
+They are called `relocatable` because all sections inside the file are assigned the same starting address (usually 0x0). Similarly, the same sections across multiple object files also share the same base address. During linking, these addresses need to be relocated based on the target microcontroller (or memory map) to avoid address conflicts and data corruption.
+
+To view the sections in the `main.o` file, run the following command:
+
+```bash
+arm-none-eabi-objdump -h main.o
+```
+
+The output of this command looks like this:
+
+```bash
+main.o:     file format elf32-littlearm
+
+Sections:
+Idx Name            Size      VMA       LMA       File off  Algn
+  0 .text           00000520  00000000  00000000  00000034  2**2
+                    CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  1 .data           00000001  00000000  00000000  00000554  2**0
+                    CONTENTS, ALLOC, LOAD, DATA
+  2 .bss            00000054  00000000  00000000  00000558  2**2
+                    ALLOC
+  3 .rodata         000000c9  00000000  00000000  00000558  2**2
+                    CONTENTS, ALLOC, LOAD, READONLY, DATA
+  4 .comment        00000046  00000000  00000000  00000621  2**0
+                    CONTENTS, READONLY
+  5 .ARM.attributes 0000002e  00000000  00000000  00000667  2**0
+                    CONTENTS, READONLY
+```
+
+To disassemble the `.text` section and write it to a file, run:
+
+```bash
+arm-none-eabi-objdump -d main.o > main_log.txt
+```
+
+For more commands and options, check the documentation here: [View More Commands](https://gcc.gnu.org/onlinedocs/gcc-13.3.0/gcc/#toc-GCC-Command-Options)
