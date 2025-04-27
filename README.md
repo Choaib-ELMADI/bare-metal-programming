@@ -171,7 +171,7 @@ After compiling a C file (without linking), the compiler generates a `.o` file. 
 
 - `.text`: contains the actual program instructions.
 - `.data`: contains initialized data.
-- `.bss`: contains uninitialized data.
+- `.bss`: Block Starting Symbol, contains uninitialized data.
 - `.rodata`: contains read-only data.
 - `.comment`: metadata added by the compiler.
 - `.ARM.attributes`: metadata added by the compiler.
@@ -212,3 +212,14 @@ arm-none-eabi-objdump -d main.o > main_log.txt
 ```
 
 For more commands and options, check the documentation here: [View More Commands](https://gcc.gnu.org/onlinedocs/gcc-13.3.0/gcc/#toc-GCC-Command-Options)
+
+### MCU Startup File
+
+The **startup file** is an assembly or C file that prepares the microcontroller to run a C program. It mainly does the following tasks:
+
+- Set up the initial stack pointer
+- Define the interrupt vector table
+- Provide default handlers for interrupts and exceptions
+- Call the `Reset_Handler`, which initializes the main memory with data in `.data` and `.bss` sections, and then calls the `main` function
+
+In the build output, you will find or create a startup file specific to the microcontroller you are using. For the STM32 Nucleo-F446RE, the startup file is `startup_stm32f446xx.s` or `startup_stm32f446xx.c`.
