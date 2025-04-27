@@ -4,6 +4,8 @@
 
 `Bare metal programming` refers to writing software that runs directly on the hardware of a microcontroller without the support of an operating system or IDE. It involves manually managing hardware resources, such as memory, peripherals, and interrupts. This approach allows for more control over the hardware and is often used in embedded systems where performance and efficiency are critical.
 
+In this project, I am using the **STM32 Nucleo-F446RE** development board. Throughout the examples and experiments, I will work with this board to write, build, and flash programs directly into its microcontroller.
+
 ## C Programs Compilation Process
 
 When we write a C program for a microcontroller, it goes through several steps before it can actually run on the hardware. This process includes compiling the code, assembling it, linking it into an executable, and finally flashing it onto the microcontroller.
@@ -78,9 +80,9 @@ Here's a quick overview of the main stages in the build process and what each on
 
 ## Cross Compilation and Toolchains
 
-`Cross-compilation` is a process in which the cross-toolchain runs on the host machine (your PC) and creates executables that run on different machine (ARM).
+**Cross-compilation** is a process in which the cross-toolchain runs on the host machine (your PC) and creates executables that run on different machine (ARM).
 
-`Cross-toolchain` is a collection of binaries which allows you to compile, assemble and link your applications. It contains binaries to debug the application on the target and analyze executables:
+**Cross-toolchain** is a collection of binaries which allows you to compile, assemble and link your applications. It contains binaries to debug the application on the target and analyze executables:
 
 - Disassemble executables
 - Dissect different sections of an executable
@@ -88,7 +90,7 @@ Here's a quick overview of the main stages in the build process and what each on
 - Convert executables to other formats (bin, ihex, ...)
 - Provide C standard libraries
 
-The toolchain we will use is GCC (`GNU Compiler Collection`), a free and open-source tool for ARM embedded processors.
+The toolchain we will use is GCC (**GNU Compiler Collection**), a free and open-source tool for ARM embedded processors.
 
 ### Download the GCC Toolchain
 
@@ -120,7 +122,7 @@ The following command compiles and assembles the `main.c` file without linking, 
 arm-none-eabi-gcc -c main.c -o main.o
 ```
 
-This next command does the same thing but specifies the target ARM processor (`cortex-m4`) and tells the compiler to generate Thumb instruction set code:
+This next command does the same thing but specifies the target ARM processor (**cortex-m4**) and tells the compiler to generate Thumb instruction set code:
 
 ```bash
 arm-none-eabi-gcc -c -mcpu=cortex-m4 -mthumb main.c -o main.o
@@ -165,7 +167,7 @@ When we compile our C programs, different types of files are generated during th
 
 ### Analyzing `.o` Relocatable Object Files
 
-After compiling a C file (without linking), the compiler generates a `.o` file. This is a relocatable object file in the ELF format (`Executable and Linkable Format`) that contains different sections:
+After compiling a C file (without linking), the compiler generates a `.o` file. This is a relocatable object file in the ELF format (**Executable and Linkable Format**) that contains different sections:
 
 - `.text`: contains the actual program instructions.
 - `.data`: contains initialized data.
@@ -174,7 +176,7 @@ After compiling a C file (without linking), the compiler generates a `.o` file. 
 - `.comment`: metadata added by the compiler.
 - `.ARM.attributes`: metadata added by the compiler.
 
-They are called `relocatable` because all sections inside the file are assigned the same starting address (usually 0x0). Similarly, the same sections across multiple object files also share the same base address. During linking, these addresses need to be relocated based on the target microcontroller (or memory map) to avoid address conflicts and data corruption.
+They are called **relocatable** because all sections inside the file are assigned the same starting address (usually 0x0). Similarly, the same sections across multiple object files also share the same base address. During linking, these addresses need to be relocated based on the target microcontroller (or memory map) to avoid address conflicts and data corruption.
 
 To view the sections in the `main.o` file, run the following command:
 
