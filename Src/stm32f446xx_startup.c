@@ -6,6 +6,14 @@
 
 #define STACK_START SRAM_END
 
+extern const uint32_t _etext;
+extern const uint32_t _sdata;
+extern const uint32_t _edata;
+extern const uint32_t _sbss;
+extern const uint32_t _ebss;
+
+int main(void);
+
 void Reset_Handler(void);
 void NMI_Handler(void) __attribute__ ((weak, alias ("Default_Handler")));
 void HardFault_Handler(void) __attribute__ ((weak, alias ("Default_Handler")));
@@ -37,12 +45,26 @@ uint32_t vectors[1 + 15 + 82] __attribute__ ((section (".vector_table"))) = {
 // ROUTINES DEFINITION
 void Reset_Handler(void) {
     // Copy .data section to SRAM
+    uint32_t size = (uint32_t)&_edata - (uint32_t)&_sdata;
+    uint8_t *pDst = (uint8_t *)&_sdata; // SRAM
+    uint8_t *pSrc = (uint8_t *)&_etext; // FLASH
+
+    for (uint32_t i = 0; i < size; ++i) {
+        *pDst++ = *pSrc++;
+    }
 
     // Zero-initialize .bss section in SRAM
+    size = (uint32_t)&_ebss - (uint32_t)&_sbss;
+    uint8_t *bssPDst = (uint8_t *)&_sbss; // SRAM
+
+    for (uint32_t i = 0; i < size; ++i) {
+        *bssPDst++ = 0;
+    }
 
     // Call std library 'init' function if used!
 
     // Call 'main'
+    main();
 }
 
 void Default_Handler(void) {
