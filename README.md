@@ -222,7 +222,7 @@ The **startup file** is an assembly or C file that prepares the microcontroller 
 - Provide default handlers for interrupts and exceptions.
 - Call the `Reset_Handler`, which initializes the main memory with data in `.data` and `.bss` sections, and then calls the `main` function.
 
-In the build output, you will find or create a startup file specific to the microcontroller you are using. For the STM32 Nucleo-F446RE, the startup file is `startup_stm32f446xx.s` or `startup_stm32f446xx.c`.
+In the build output, you will find or create a startup file specific to the microcontroller you are using. For the STM32 Nucleo-F446RE, the startup file is `stm32f446xx_startup.s` or `stm32f446xx_startup.c`.
 
 ### Linker Scripts
 

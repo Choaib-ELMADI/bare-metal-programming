@@ -13,7 +13,7 @@ SECTIONS
 {
     .text:
     {
-        .vector_table of startup_stm32f446xx.o
+        .vector_table of stm32f446xx_startup.o
         *(.text)
         *(.rodata)
         _etext = .;
