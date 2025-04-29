@@ -224,7 +224,7 @@ The **startup file** is an assembly or C file that prepares the microcontroller 
 
 In the build output, you will find or create a startup file specific to the microcontroller you are using. For the STM32 Nucleo-F446RE, the startup file is `stm32f446xx_startup.s` or `stm32f446xx_startup.c`.
 
-### Linker Scripts
+### Linker Script
 
 A **linker script** is used to define how the program's sections (`.text`, `.data`, and `.bss`) are arranged in memory. Linker scripts are written using the **GNU linker command language** and usually have a `.ld` file extension.
 
@@ -247,4 +247,14 @@ To generate the final executable file, use the following command:
 
 ```bash
 arm-none-eabi-gcc -nostdlib -T stm32f446xx_ls.ld *.o -o final.elf
+```
+
+### Memory Map File
+
+To better understand how the linker placed each section and symbol in memory, you can generate a **memory map file** during the linking phase. This file shows details like section sizes, memory addresses, and symbol locations. This is very useful for debugging memory issues or verifying that your linker script works correctly.
+
+To generate it, use the `-Wl,-Map=final.map` flag with the linker:
+
+```bash
+arm-none-eabi-gcc -nostdlib -T stm32f446xx_ls.ld *.o -Wl,-Map=final.map -o final.elf
 ```
