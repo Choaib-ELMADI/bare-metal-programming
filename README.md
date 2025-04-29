@@ -169,12 +169,12 @@ When we compile our C programs, different types of files are generated during th
 
 After compiling a C file (without linking), the compiler generates a `.o` file. This is a relocatable object file in the ELF format (**Executable and Linkable Format**) that contains different sections:
 
-- `.text`: Contains the actual program instructions
-- `.data`: Contains initialized data
-- `.bss`: Block Starting Symbol, contains uninitialized data
-- `.rodata`: Contains read-only data
-- `.comment`: Metadata added by the compiler
-- `.ARM.attributes`: Metadata added by the compiler
+- `.text`: Contains the actual program instructions.
+- `.data`: Contains initialized data.
+- `.bss`: Block Starting Symbol, contains uninitialized data.
+- `.rodata`: Contains read-only data.
+- `.comment`: Metadata added by the compiler.
+- `.ARM.attributes`: Metadata added by the compiler.
 
 They are called **relocatable** because all sections inside the file are assigned the same starting address (usually 0x0). Similarly, the same sections across multiple object files also share the same base address. During linking, these addresses need to be relocated based on the target microcontroller (or memory map) to avoid address conflicts and data corruption.
 
@@ -217,10 +217,10 @@ For more commands and options, check the documentation here: [View More Commands
 
 The **startup file** is an assembly or C file that prepares the microcontroller to run a C program. It mainly does the following tasks:
 
-- Set up the initial stack pointer
-- Define the interrupt vector table
-- Provide default handlers for interrupts and exceptions
-- Call the `Reset_Handler`, which initializes the main memory with data in `.data` and `.bss` sections, and then calls the `main` function
+- Set up the initial stack pointer.
+- Define the interrupt vector table.
+- Provide default handlers for interrupts and exceptions.
+- Call the `Reset_Handler`, which initializes the main memory with data in `.data` and `.bss` sections, and then calls the `main` function.
 
 In the build output, you will find or create a startup file specific to the microcontroller you are using. For the STM32 Nucleo-F446RE, the startup file is `startup_stm32f446xx.s` or `startup_stm32f446xx.c`.
 
@@ -230,12 +230,15 @@ A **linker script** is used to define how the program's sections (`.text`, `.dat
 
 You must supply the linker script during the linking phase by using the `-T` option with the linker.
 
+Linker scripts use special **symbols**, which are names associated with memory addresses (`_etext`, `_sdata`, `_edata`). These symbols help the linker correctly place and reference data and code. They are part of the **symbol table** created during linking and can also be accessed in your C code using `extern`.
+
 Some important keywords used when writing linker scripts are:
 
-- `ENTRY(symbol)`: Defines the entry point (**Reset_Handler**) of the program
-- `MEMORY`: Defines the available memory regions (FLASH, RAM, ...) and their sizes
-- `SECTIONS`: Describes how the program sections should be placed into the memory regions
-- `>`: Specifies into which memory region a section should be placed
-- `AT>`: Specifies the load memory address for a section
-- `KEEP()`: Forces the linker to keep certain sections or symbols
-- `ALIGN(n)`: Aligns sections or symbols to a specific memory boundary (n bytes)
+- `ENTRY(symbol)`: Defines the entry point (**Reset_Handler**) of the program.
+- `MEMORY`: Defines the available memory regions (FLASH, RAM, ...) and their sizes.
+- `SECTIONS`: Describes how the program sections should be placed into the memory regions.
+- `> REGION`: Specifies into which memory region a section should be placed.
+- `AT > REGION`: Specifies the load memory address for a section.
+- `KEEP()`: Forces the linker to keep certain sections or symbols.
+- `ALIGN(n)`: Aligns sections or symbols to a specific memory boundary (n bytes).
+- `.`: Refers to the **location counter**, which tracks the current memory address during linking. It is automatically incremented by the size of current section.

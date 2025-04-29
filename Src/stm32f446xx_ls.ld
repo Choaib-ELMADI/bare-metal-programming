@@ -6,6 +6,9 @@ MEMORY
     SRAM (rwx) : ORIGIN=0x20000000, LENGTH=128K
 }
 
+_max_heap_size = 0x400;
+_max_stack_size = 0x200;
+
 SECTIONS
 {
     .text:
@@ -13,15 +16,20 @@ SECTIONS
         .vector_table of startup_stm32f446xx.o
         *(.text)
         *(.rodata)
-    }> FLASH /* Virtual Memory Address AT> Load Memory Address */
+        _etext = .;
+    } > FLASH /* Virtual Memory Address AT> Load Memory Address */
 
     .data:
     {
+        _sdata = .;
         *(.data)
-    }> SRAM AT> FLASH
+        _edata = .;
+    } > SRAM AT > FLASH
 
     .bss:
     {
+        _sbss = .;
         *(.bss)
-    }> SRAM
+        _ebss = .;
+    } > SRAM
 }
