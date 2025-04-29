@@ -242,3 +242,9 @@ Some important keywords used when writing linker scripts are:
 - `KEEP()`: Forces the linker to keep certain sections or symbols.
 - `ALIGN(n)`: Aligns sections or symbols to a specific memory boundary (n bytes).
 - `.`: Refers to the **location counter**, which tracks the current memory address during linking. It is automatically incremented by the size of current section.
+
+To generate the final executable file, use the following command:
+
+```bash
+arm-none-eabi-gcc -nostdlib -T stm32f446xx_ls.ld *.o -o final.elf
+```
