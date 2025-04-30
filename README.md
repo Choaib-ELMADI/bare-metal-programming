@@ -159,6 +159,8 @@ make
 
 Will automatically compile `main.c` into `main.o` based on the rules you defined!
 
+> Note: This is just the initial Makefile with one basic rule. More useful commands (called targets) will be added as we progress through the project.
+
 If you want to dive deeper into build systems like Makefiles, CMake, and how projects are organized and automated, check out this repository: [Getting Started with CMake](https://github.com/Choaib-ELMADI/getting-started-with-cmake)
 
 ## Analyzing Build Output Files
@@ -321,11 +323,11 @@ To use OpenOCD, you need to install it and make sure it’s available in your sy
 
 - Download it from the official site: [https://gnutoolchains.com/arm-eabi/openocd/](https://gnutoolchains.com/arm-eabi/openocd/)
 - After extracting, add the `bin` folder (where `openocd.exe` is located) to your system's **Path** environment variable.
-- **Important**: Make sure your development board is connected to your PC **before** running the OpenOCD command.
-- To run OpenOCD with your STM32 board, use the following command in your terminal:
+- Make sure your development board is connected to your PC **before** running the OpenOCD command.
+- To run OpenOCD with your STM32 board, use the following command:
 
 ```bash
 openocd -f board/st_nucleo_f4.cfg
 ```
 
-> Make sure to use the correct `.cfg` file for your specific development board.
+> Note: Make sure to use the correct `.cfg` file for your specific development board.
