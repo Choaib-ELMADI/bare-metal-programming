@@ -258,3 +258,74 @@ To generate it, use the `-Wl,-Map=final.map` flag with the linker:
 ```bash
 arm-none-eabi-gcc -nostdlib -T stm32f446xx_ls.ld *.o -Wl,-Map=final.map -o final.elf
 ```
+
+## Downloading and Debugging Executables
+
+Our goal is to flash the final generated executable into the microcontroller’s internal flash memory and run the program on the development board. There are two main methods:
+
+- **Using a debug adapter** to connect the target to the host. This is called **in-circuit programming/debugging**.
+
+<div align="center">
+
+```mermaid
+graph LR
+    subgraph HOST[HOST Machine]
+        OpenOCD[Running<br>OpenOCD]
+    end
+
+    subgraph DEBUGGER[Debug Adapter]
+        STLINK[Example:<br>ST-LINK/V2]
+    end
+
+    subgraph TARGET
+        FLASH[uC<br>FLASH]
+    end
+
+    OpenOCD --USB Interface--> STLINK --SWD or JTAG Interface--> FLASH
+
+    class HOST host;
+    class OpenOCD openocd;
+    class DEBUGGER debugger;
+    class STLINK stlink;
+    class TARGET target;
+    class FLASH flash;
+
+    classDef host fill:transparent,stroke:transparent,stroke-width:2px,color:#3D90D7;
+    classDef openocd fill:#FE774310,stroke:#FE7743,stroke-width:2px,color:#FE7743;
+    classDef debugger fill:transparent,stroke:transparent,stroke-width:2px,color:#3D90D7;
+    classDef stlink fill:#BE598510,stroke:#BE5985,stroke-width:2px,color:#BE5985;
+    classDef target fill:transparent,stroke:transparent,stroke-width:2px,color:#3D90D7;
+    classDef flash fill:#81E7AF10,stroke:#81E7AF,stroke-width:2px,color:#81E7AF;
+
+    linkStyle 0 stroke:#FE7743,stroke-width:2px;
+    linkStyle 1 stroke:#BE5985,stroke-width:2px;
+```
+
+</div>
+
+- LATER HERE
+
+### OpenOCD (Open On-Chip Debugger)
+
+**OpenOCD** is a free and open-source tool that runs on the host machine. It allows you to flash, debug, and test embedded systems:
+
+- It supports many processors like ARM7, ARM9, Cortex-M, and Intel Quark.
+- It works with different debug adapters such as ST-LINK, J-Link, or others.
+- It uses the **GDB protocol** to allow stepping through code, setting breakpoints, and inspecting variables.
+- It supports **flash programming** for internal and external flash memories on various microcontrollers.
+- It’s widely used with STM32 boards and works well with `arm-none-eabi-gdb`.
+
+### Installing and Running OpenOCD
+
+To use OpenOCD, you need to install it and make sure it’s available in your system path:
+
+- Download it from the official site: [https://gnutoolchains.com/arm-eabi/openocd/](https://gnutoolchains.com/arm-eabi/openocd/)
+- After extracting, add the `bin` folder (where `openocd.exe` is located) to your system's **Path** environment variable.
+- **Important**: Make sure your development board is connected to your PC **before** running the OpenOCD command.
+- To run OpenOCD with your STM32 board, use the following command in your terminal:
+
+```bash
+openocd -f board/st_nucleo_f4.cfg
+```
+
+> Make sure to use the correct `.cfg` file for your specific development board.

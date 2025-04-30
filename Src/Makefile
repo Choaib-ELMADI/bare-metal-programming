@@ -18,4 +18,7 @@ final.elf: main.o led.o stm32f446xx_startup.o
 	$(CC) $(LDFLAGS) $^ -o $@
 
 clean:
-	@echo Run: rm -r *.o; rm -r *.elf
+	rm -r *.o; rm -r *.elf
+
+load:
+	openocd -f board/st_nucleo_f4.cfg
