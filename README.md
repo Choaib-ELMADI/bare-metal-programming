@@ -321,7 +321,7 @@ graph LR
 
 To use OpenOCD, you need to install it and make sure it’s available in your system path:
 
-- Download it from the official site: [https://gnutoolchains.com/arm-eabi/openocd/](https://gnutoolchains.com/arm-eabi/openocd/)
+- Download it from the official site: [Download OpenOCD for Windows](https://gnutoolchains.com/arm-eabi/openocd/)
 - After extracting, add the `bin` folder (where `openocd.exe` is located) to your system's **Path** environment variable.
 - Make sure your development board is connected to your PC **before** running the OpenOCD command.
 - To run OpenOCD with your STM32 board, use the following command:
@@ -331,3 +331,33 @@ openocd -f board/st_nucleo_f4.cfg
 ```
 
 > Note: Make sure to use the correct `.cfg` file for your specific development board.
+
+### Flashing and Debugging using GDB
+
+Once the OpenOCD server is running, follow these steps in a new terminal:
+
+- Start the GDB client:
+
+```bash
+arm-none-eabi-gdb
+```
+
+- Connect to the OpenOCD server:
+
+```bash
+target remote localhost:3333
+```
+
+- After connecting, always run this to reset and initialize the target:
+
+```bash
+monitor reset init
+```
+
+- Finally, flash the executable into the microcontroller:
+
+```bash
+monitor flash write_image erase final.elf
+```
+
+The program is now flashed to the board. You can start debugging it from GDB.
