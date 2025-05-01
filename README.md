@@ -263,7 +263,7 @@ arm-none-eabi-gcc -nostdlib -T stm32f446xx_ls.ld *.o -Wl,-Map=final.map -o final
 
 ## Downloading and Debugging Executables
 
-Our goal is to flash the final generated executable into the microcontroller’s internal flash memory and run the program on the development board. There are two main methods:
+Our goal is to flash the final generated executable into the microcontroller’s internal flash memory and run the program on the development board. We will do this using one method:
 
 - **Using a debug adapter** to connect the target to the host. This is called **in-circuit programming/debugging**.
 
@@ -305,8 +305,6 @@ graph LR
 
 </div>
 
-- LATER HERE
-
 ### OpenOCD (Open On-Chip Debugger)
 
 **OpenOCD** is a free and open-source tool that runs on the host machine. It allows you to flash, debug, and test embedded systems:
@@ -331,6 +329,8 @@ openocd -f board/st_nucleo_f4.cfg
 ```
 
 > Note: Make sure to use the correct `.cfg` file for your specific development board.
+
+To quit OpenOCD, simply press: `Ctrl + C`.
 
 ### Flashing and Debugging using GDB
 
@@ -361,3 +361,57 @@ monitor flash write_image erase final.elf
 ```
 
 The program is now flashed to the board. You can start debugging it from GDB.
+
+### Useful GDB Commands
+
+Here are some GDB commands to control and inspect the MCU:
+
+- Reset and halt the MCU immediately:
+
+```bash
+monitor reset halt
+```
+
+- Resume program execution:
+
+```bash
+monitor resume
+```
+
+- Reset the MCU without halting:
+
+```bash
+monitor reset
+```
+
+- Halt program execution:
+
+```bash
+monitor halt
+```
+
+- Read memory at a specific address:
+
+```bash
+monitor size address count # size = mdd | mdw | mdh | mdb
+```
+
+- Add a breakpoint at a specific address:
+
+```bash
+monitor bp address length type # type = hw | sw
+```
+
+- Remove a breakpoint:
+
+```bash
+monitor rbp address
+```
+
+- Exit GDB:
+
+```bash
+quit
+```
+
+These commands allow you to fully control program execution, set breakpoints, read memory, and debug issues.
