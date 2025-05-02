@@ -11,7 +11,7 @@ The repository is structured with two main folders:
 - `Src/`: Contains small learning examples and experiments created while exploring bare metal concepts step by step.
 - `Main/`: Contains the actual project files.
 
-The main project goal is to **blink the onboard LEDs LED2 and LED3** on the STM32 Nucleo board using bare metal programming, without relying on any high-level libraries or HAL code. This involves directly controlling the GPIO registers of the STM32F446RE microcontroller.
+The main project goal is to **blink the onboard LED LD2** on the STM32 Nucleo board using bare metal programming, without relying on any high-level libraries or HAL code. This involves directly controlling the GPIO registers of the STM32F446RE microcontroller.
 
 ## C Programs Compilation Process
 
