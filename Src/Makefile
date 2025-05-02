@@ -4,8 +4,12 @@ CFLAGS = -c -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0
 CSFLAGS = -S -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0
 # LDFLAGS = -nostdlib -T stm32f446xx_ls.ld -Wl,-Map=final.map
 LDFLAGS = -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=nano.specs -T stm32f446xx_ls.ld -Wl,-Map=final.map
+LDFLAGS_SH = -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=rdimon.specs -T stm32f446xx_ls.ld -Wl,-Map=final.map
 
 all: main.s main.o led.o stm32f446xx_startup.o syscalls.o final.elf
+
+# sh = SEMIHOSTING
+sh: main.s main.o led.o stm32f446xx_startup.o final_sh.elf
 
 main.s: main.c
 	$(CC) $(CSFLAGS) $^ -o $@
@@ -24,6 +28,9 @@ syscalls.o: syscalls.c
 
 final.elf: main.o led.o stm32f446xx_startup.o syscalls.o
 	$(CC) $(LDFLAGS) $^ -o $@
+
+final_sh.elf: main.o led.o stm32f446xx_startup.o
+	$(CC) $(LDFLAGS_SH) $^ -o $@
 
 clean:
 	clear; rm -r *.s *.o *.elf *.map

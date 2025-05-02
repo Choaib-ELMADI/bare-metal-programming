@@ -436,3 +436,33 @@ These are typically defined in a file called `syscalls.c`, and include functions
 - `_open`, `_close`, `_lseek`, `_fstat`, `_isatty`, `_sbrk`, ...
 
 By implementing these functions, you tell newlib how to handle I/O operations (like redirecting output to a UART or debugger console) and memory allocation.
+
+### Enabling Semihosting
+
+**Semihosting** is a technique that allows your embedded program to communicate with your host machine through the debug interface. It enables functions like `printf` to send output directly to your PC (inside the OpenOCD terminal), even if the microcontroller doesn’t have a display. To use semihosting:
+
+- Compile your project with this flag:
+
+```bash
+--specs=rdimon.specs
+```
+
+- After starting the GDB client, enable semihosting with:
+
+```bash
+monitor arm semihosting enable
+```
+
+- Then reset the MCU to start the program:
+
+```bash
+monitor reset
+```
+
+Now, any output from functions like `printf()` will appear directly in the OpenOCD terminal.
+
+- To safely disconnect OpenOCD from the target when you're done, use:
+
+```bash
+monitor shutdown
+```
