@@ -12,6 +12,7 @@ extern const uint32_t _edata;
 extern const uint32_t _sbss;
 extern const uint32_t _ebss;
 
+void __libc_init_array(void);
 int main(void);
 
 void Reset_Handler(void);
@@ -62,6 +63,7 @@ void Reset_Handler(void) {
     }
 
     // Call std library 'init' function if used!
+    __libc_init_array();
 
     // Call 'main'
     main();

@@ -415,3 +415,24 @@ quit
 ```
 
 These commands allow you to fully control program execution, set breakpoints, read memory, and debug issues. More commands here: [OpenOCD General Commands](https://openocd.org/doc/html/General-Commands.html)
+
+## Integrating C Standard Libraries and Semihosting
+
+To use C standard library features like `printf`, `malloc`, or `open`, embedded systems need a minimal C library. The GNU ARM toolchain provides two options:
+
+- **newlib**: Full-featured C library implementation.
+- **newlib-nano**: A smaller, lightweight version optimized for embedded systems.
+
+Both are automatically installed when you install the GNU ARM toolchain.
+
+### System Calls and `syscalls.c`
+
+Since microcontrollers do not have an operating system to provide standard I/O or file management, **newlib** relies on **low-level system call stubs** that you must implement yourself.
+
+These are typically defined in a file called `syscalls.c`, and include functions like:
+
+- `_write` used for `printf()`
+- `_read` used for `scanf()`
+- `_open`, `_close`, `_lseek`, `_fstat`, `_isatty`, `_sbrk`, ...
+
+By implementing these functions, you tell newlib how to handle I/O operations (like redirecting output to a UART or debugger console) and memory allocation.

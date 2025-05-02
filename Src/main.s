@@ -50,6 +50,10 @@ const_V_3:
 	.size	user_tasks, 80
 user_tasks:
 	.space	80
+	.section	.rodata
+	.align	2
+.LC0:
+	.ascii	"Implementation of simple task scheduler\000"
 	.text
 	.align	1
 	.global	main
@@ -63,8 +67,11 @@ main:
 	push	{r7, lr}
 	add	r7, sp, #0
 	bl	enable_processor_faults
+	bl	initialise_monitor_handles
 	ldr	r0, .L3
 	bl	init_scheduler_stack
+	ldr	r0, .L3+4
+	bl	puts
 	bl	init_tasks_stack
 	bl	led_init_all
 	mov	r0, #1000
@@ -78,6 +85,7 @@ main:
 	.align	2
 .L3:
 	.word	536996864
+	.word	.LC0
 	.size	main, .-main
 	.align	1
 	.global	idle_task
@@ -95,6 +103,11 @@ idle_task:
 	nop
 	b	.L6
 	.size	idle_task, .-idle_task
+	.section	.rodata
+	.align	2
+.LC1:
+	.ascii	"Task1 is executing\000"
+	.text
 	.align	1
 	.global	task1_handler
 	.syntax unified
@@ -107,6 +120,8 @@ task1_handler:
 	push	{r7, lr}
 	add	r7, sp, #0
 .L8:
+	ldr	r0, .L9
+	bl	puts
 	movs	r0, #12
 	bl	led_on
 	mov	r0, #1000
@@ -117,7 +132,16 @@ task1_handler:
 	bl	task_delay
 	nop
 	b	.L8
+.L10:
+	.align	2
+.L9:
+	.word	.LC1
 	.size	task1_handler, .-task1_handler
+	.section	.rodata
+	.align	2
+.LC2:
+	.ascii	"Task2 is executing\000"
+	.text
 	.align	1
 	.global	task2_handler
 	.syntax unified
@@ -129,7 +153,9 @@ task2_handler:
 	@ frame_needed = 1, uses_anonymous_args = 0
 	push	{r7, lr}
 	add	r7, sp, #0
-.L10:
+.L12:
+	ldr	r0, .L13
+	bl	puts
 	movs	r0, #13
 	bl	led_on
 	mov	r0, #1000
@@ -139,8 +165,17 @@ task2_handler:
 	mov	r0, #1000
 	bl	task_delay
 	nop
-	b	.L10
+	b	.L12
+.L14:
+	.align	2
+.L13:
+	.word	.LC2
 	.size	task2_handler, .-task2_handler
+	.section	.rodata
+	.align	2
+.LC3:
+	.ascii	"Task3 is executing\000"
+	.text
 	.align	1
 	.global	task3_handler
 	.syntax unified
@@ -152,7 +187,9 @@ task3_handler:
 	@ frame_needed = 1, uses_anonymous_args = 0
 	push	{r7, lr}
 	add	r7, sp, #0
-.L12:
+.L16:
+	ldr	r0, .L17
+	bl	puts
 	movs	r0, #15
 	bl	led_on
 	movs	r0, #250
@@ -162,8 +199,17 @@ task3_handler:
 	movs	r0, #250
 	bl	task_delay
 	nop
-	b	.L12
+	b	.L16
+.L18:
+	.align	2
+.L17:
+	.word	.LC3
 	.size	task3_handler, .-task3_handler
+	.section	.rodata
+	.align	2
+.LC4:
+	.ascii	"Task4 is executing\000"
+	.text
 	.align	1
 	.global	task4_handler
 	.syntax unified
@@ -175,7 +221,9 @@ task4_handler:
 	@ frame_needed = 1, uses_anonymous_args = 0
 	push	{r7, lr}
 	add	r7, sp, #0
-.L14:
+.L20:
+	ldr	r0, .L21
+	bl	puts
 	movs	r0, #14
 	bl	led_on
 	movs	r0, #125
@@ -185,7 +233,11 @@ task4_handler:
 	movs	r0, #125
 	bl	task_delay
 	nop
-	b	.L14
+	b	.L20
+.L22:
+	.align	2
+.L21:
+	.word	.LC4
 	.size	task4_handler, .-task4_handler
 	.align	1
 	.global	init_systick_timer
@@ -201,11 +253,11 @@ init_systick_timer:
 	sub	sp, sp, #28
 	add	r7, sp, #0
 	str	r0, [r7, #4]
-	ldr	r3, .L16
+	ldr	r3, .L24
 	str	r3, [r7, #20]
-	ldr	r3, .L16+4
+	ldr	r3, .L24+4
 	str	r3, [r7, #16]
-	ldr	r2, .L16+8
+	ldr	r2, .L24+8
 	ldr	r3, [r7, #4]
 	udiv	r3, r2, r3
 	subs	r3, r3, #1
@@ -240,9 +292,9 @@ init_systick_timer:
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L17:
+.L25:
 	.align	2
-.L16:
+.L24:
 	.word	-536813548
 	.word	-536813552
 	.word	16000000
@@ -282,56 +334,56 @@ init_tasks_stack:
 	push	{r7}
 	sub	sp, sp, #20
 	add	r7, sp, #0
-	ldr	r3, .L24
+	ldr	r3, .L32
 	movs	r2, #0
 	strb	r2, [r3, #8]
-	ldr	r3, .L24
+	ldr	r3, .L32
 	movs	r2, #0
 	strb	r2, [r3, #24]
-	ldr	r3, .L24
+	ldr	r3, .L32
 	movs	r2, #0
 	strb	r2, [r3, #40]
-	ldr	r3, .L24
+	ldr	r3, .L32
 	movs	r2, #0
 	strb	r2, [r3, #56]
-	ldr	r3, .L24
+	ldr	r3, .L32
 	movs	r2, #0
 	strb	r2, [r3, #72]
-	ldr	r3, .L24
-	ldr	r2, .L24+4
+	ldr	r3, .L32
+	ldr	r2, .L32+4
 	str	r2, [r3]
-	ldr	r3, .L24
-	ldr	r2, .L24+8
+	ldr	r3, .L32
+	ldr	r2, .L32+8
 	str	r2, [r3, #16]
-	ldr	r3, .L24
-	ldr	r2, .L24+12
+	ldr	r3, .L32
+	ldr	r2, .L32+12
 	str	r2, [r3, #32]
-	ldr	r3, .L24
-	ldr	r2, .L24+16
+	ldr	r3, .L32
+	ldr	r2, .L32+16
 	str	r2, [r3, #48]
-	ldr	r3, .L24
-	ldr	r2, .L24+20
+	ldr	r3, .L32
+	ldr	r2, .L32+20
 	str	r2, [r3, #64]
-	ldr	r3, .L24
-	ldr	r2, .L24+24
+	ldr	r3, .L32
+	ldr	r2, .L32+24
 	str	r2, [r3, #12]
-	ldr	r3, .L24
-	ldr	r2, .L24+28
+	ldr	r3, .L32
+	ldr	r2, .L32+28
 	str	r2, [r3, #28]
-	ldr	r3, .L24
-	ldr	r2, .L24+32
+	ldr	r3, .L32
+	ldr	r2, .L32+32
 	str	r2, [r3, #44]
-	ldr	r3, .L24
-	ldr	r2, .L24+36
+	ldr	r3, .L32
+	ldr	r2, .L32+36
 	str	r2, [r3, #60]
-	ldr	r3, .L24
-	ldr	r2, .L24+40
+	ldr	r3, .L32
+	ldr	r2, .L32+40
 	str	r2, [r3, #76]
 	movs	r3, #0
 	str	r3, [r7, #8]
-	b	.L20
-.L23:
-	ldr	r2, .L24
+	b	.L28
+.L31:
+	ldr	r2, .L32
 	ldr	r3, [r7, #8]
 	lsls	r3, r3, #4
 	add	r3, r3, r2
@@ -346,7 +398,7 @@ init_tasks_stack:
 	ldr	r3, [r7, #12]
 	subs	r3, r3, #4
 	str	r3, [r7, #12]
-	ldr	r2, .L24
+	ldr	r2, .L32
 	ldr	r3, [r7, #8]
 	lsls	r3, r3, #4
 	add	r3, r3, r2
@@ -363,8 +415,8 @@ init_tasks_stack:
 	str	r2, [r3]
 	movs	r3, #0
 	str	r3, [r7, #4]
-	b	.L21
-.L22:
+	b	.L29
+.L30:
 	ldr	r3, [r7, #12]
 	subs	r3, r3, #4
 	str	r3, [r7, #12]
@@ -374,12 +426,12 @@ init_tasks_stack:
 	ldr	r3, [r7, #4]
 	adds	r3, r3, #1
 	str	r3, [r7, #4]
-.L21:
+.L29:
 	ldr	r3, [r7, #4]
 	cmp	r3, #12
-	ble	.L22
+	ble	.L30
 	ldr	r2, [r7, #12]
-	ldr	r1, .L24
+	ldr	r1, .L32
 	ldr	r3, [r7, #8]
 	lsls	r3, r3, #4
 	add	r3, r3, r1
@@ -387,10 +439,10 @@ init_tasks_stack:
 	ldr	r3, [r7, #8]
 	adds	r3, r3, #1
 	str	r3, [r7, #8]
-.L20:
+.L28:
 	ldr	r3, [r7, #8]
 	cmp	r3, #4
-	ble	.L23
+	ble	.L31
 	nop
 	nop
 	adds	r7, r7, #20
@@ -398,9 +450,9 @@ init_tasks_stack:
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L25:
+.L33:
 	.align	2
-.L24:
+.L32:
 	.word	user_tasks
 	.word	536997888
 	.word	537001984
@@ -426,7 +478,7 @@ enable_processor_faults:
 	push	{r7}
 	sub	sp, sp, #12
 	add	r7, sp, #0
-	ldr	r3, .L27
+	ldr	r3, .L35
 	str	r3, [r7, #4]
 	ldr	r3, [r7, #4]
 	ldr	r3, [r3]
@@ -449,9 +501,9 @@ enable_processor_faults:
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L28:
+.L36:
 	.align	2
-.L27:
+.L35:
 	.word	-536810204
 	.size	enable_processor_faults, .-enable_processor_faults
 	.align	1
@@ -466,9 +518,9 @@ get_psp_value:
 	@ link register save eliminated.
 	push	{r7}
 	add	r7, sp, #0
-	ldr	r3, .L31
+	ldr	r3, .L39
 	ldrb	r3, [r3]	@ zero_extendqisi2
-	ldr	r2, .L31+4
+	ldr	r2, .L39+4
 	lsls	r3, r3, #4
 	add	r3, r3, r2
 	ldr	r3, [r3]
@@ -477,9 +529,9 @@ get_psp_value:
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L32:
+.L40:
 	.align	2
-.L31:
+.L39:
 	.word	current_task
 	.word	user_tasks
 	.size	get_psp_value, .-get_psp_value
@@ -497,9 +549,9 @@ save_psp_value:
 	sub	sp, sp, #12
 	add	r7, sp, #0
 	str	r0, [r7, #4]
-	ldr	r3, .L34
+	ldr	r3, .L42
 	ldrb	r3, [r3]	@ zero_extendqisi2
-	ldr	r2, .L34+4
+	ldr	r2, .L42+4
 	lsls	r3, r3, #4
 	add	r3, r3, r2
 	ldr	r2, [r7, #4]
@@ -510,9 +562,9 @@ save_psp_value:
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L35:
+.L43:
 	.align	2
-.L34:
+.L42:
 	.word	current_task
 	.word	user_tasks
 	.size	save_psp_value, .-save_psp_value
@@ -533,17 +585,17 @@ update_next_task:
 	str	r3, [r7, #4]
 	movs	r3, #0
 	str	r3, [r7]
-	b	.L37
-.L40:
-	ldr	r3, .L44
+	b	.L45
+.L48:
+	ldr	r3, .L52
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	adds	r3, r3, #1
 	uxtb	r2, r3
-	ldr	r3, .L44
+	ldr	r3, .L52
 	strb	r2, [r3]
-	ldr	r3, .L44
+	ldr	r3, .L52
 	ldrb	r2, [r3]	@ zero_extendqisi2
-	ldr	r3, .L44+4
+	ldr	r3, .L52+4
 	umull	r1, r3, r3, r2
 	lsrs	r1, r3, #2
 	mov	r3, r1
@@ -551,11 +603,11 @@ update_next_task:
 	add	r3, r3, r1
 	subs	r3, r2, r3
 	uxtb	r2, r3
-	ldr	r3, .L44
+	ldr	r3, .L52
 	strb	r2, [r3]
-	ldr	r3, .L44
+	ldr	r3, .L52
 	ldrb	r3, [r3]	@ zero_extendqisi2
-	ldr	r2, .L44+8
+	ldr	r2, .L52+8
 	lsls	r3, r3, #4
 	add	r3, r3, r2
 	adds	r3, r3, #8
@@ -563,39 +615,39 @@ update_next_task:
 	str	r3, [r7, #4]
 	ldr	r3, [r7, #4]
 	cmp	r3, #0
-	bne	.L38
-	ldr	r3, .L44
+	bne	.L46
+	ldr	r3, .L52
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	cmp	r3, #0
-	bne	.L42
-.L38:
+	bne	.L50
+.L46:
 	ldr	r3, [r7]
 	adds	r3, r3, #1
 	str	r3, [r7]
-.L37:
+.L45:
 	ldr	r3, [r7]
 	cmp	r3, #4
-	ble	.L40
-	b	.L39
-.L42:
+	ble	.L48
+	b	.L47
+.L50:
 	nop
-.L39:
+.L47:
 	ldr	r3, [r7, #4]
 	cmp	r3, #0
-	beq	.L43
-	ldr	r3, .L44
+	beq	.L51
+	ldr	r3, .L52
 	movs	r2, #0
 	strb	r2, [r3]
-.L43:
+.L51:
 	nop
 	adds	r7, r7, #12
 	mov	sp, r7
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L45:
+.L53:
 	.align	2
-.L44:
+.L52:
 	.word	current_task
 	.word	-858993459
 	.word	user_tasks
@@ -649,7 +701,7 @@ schedule:
 	push	{r7}
 	sub	sp, sp, #12
 	add	r7, sp, #0
-	ldr	r3, .L48
+	ldr	r3, .L56
 	str	r3, [r7, #4]
 	ldr	r3, [r7, #4]
 	ldr	r3, [r3]
@@ -662,9 +714,9 @@ schedule:
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L49:
+.L57:
 	.align	2
-.L48:
+.L56:
 	.word	-536810236
 	.size	schedule, .-schedule
 	.align	1
@@ -689,32 +741,32 @@ task_delay:
 @ 0 "" 2
 	.thumb
 	.syntax unified
-	ldr	r3, .L52
+	ldr	r3, .L60
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	cmp	r3, #0
-	beq	.L51
-	ldr	r3, .L52+4
+	beq	.L59
+	ldr	r3, .L60+4
 	ldr	r2, [r3]
-	ldr	r3, .L52
+	ldr	r3, .L60
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	mov	r0, r3
 	ldr	r3, [r7, #4]
 	add	r2, r2, r3
-	ldr	r1, .L52+8
+	ldr	r1, .L60+8
 	lsls	r3, r0, #4
 	add	r3, r3, r1
 	adds	r3, r3, #4
 	str	r2, [r3]
-	ldr	r3, .L52
+	ldr	r3, .L60
 	ldrb	r3, [r3]	@ zero_extendqisi2
-	ldr	r2, .L52+8
+	ldr	r2, .L60+8
 	lsls	r3, r3, #4
 	add	r3, r3, r2
 	adds	r3, r3, #8
 	movs	r2, #255
 	strb	r2, [r3]
 	bl	schedule
-.L51:
+.L59:
 	.syntax unified
 @ 243 "main.c" 1
 	MOV R0,#0x0
@@ -729,9 +781,9 @@ task_delay:
 	mov	sp, r7
 	@ sp needed
 	pop	{r7, pc}
-.L53:
+.L61:
 	.align	2
-.L52:
+.L60:
 	.word	current_task
 	.word	g_tick_count
 	.word	user_tasks
@@ -793,19 +845,19 @@ update_global_tick_count:
 	@ link register save eliminated.
 	push	{r7}
 	add	r7, sp, #0
-	ldr	r3, .L56
+	ldr	r3, .L64
 	ldr	r3, [r3]
 	adds	r3, r3, #1
-	ldr	r2, .L56
+	ldr	r2, .L64
 	str	r3, [r2]
 	nop
 	mov	sp, r7
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L57:
+.L65:
 	.align	2
-.L56:
+.L64:
 	.word	g_tick_count
 	.size	update_global_tick_count, .-update_global_tick_count
 	.align	1
@@ -823,41 +875,41 @@ unblock_tasks:
 	add	r7, sp, #0
 	movs	r3, #1
 	str	r3, [r7, #4]
-	b	.L59
-.L61:
-	ldr	r2, .L62
+	b	.L67
+.L69:
+	ldr	r2, .L70
 	ldr	r3, [r7, #4]
 	lsls	r3, r3, #4
 	add	r3, r3, r2
 	adds	r3, r3, #8
 	ldrb	r3, [r3]	@ zero_extendqisi2
 	cmp	r3, #0
-	beq	.L60
-	ldr	r2, .L62
+	beq	.L68
+	ldr	r2, .L70
 	ldr	r3, [r7, #4]
 	lsls	r3, r3, #4
 	add	r3, r3, r2
 	adds	r3, r3, #4
 	ldr	r2, [r3]
-	ldr	r3, .L62+4
+	ldr	r3, .L70+4
 	ldr	r3, [r3]
 	cmp	r2, r3
-	bne	.L60
-	ldr	r2, .L62
+	bne	.L68
+	ldr	r2, .L70
 	ldr	r3, [r7, #4]
 	lsls	r3, r3, #4
 	add	r3, r3, r2
 	adds	r3, r3, #8
 	movs	r2, #0
 	strb	r2, [r3]
-.L60:
+.L68:
 	ldr	r3, [r7, #4]
 	adds	r3, r3, #1
 	str	r3, [r7, #4]
-.L59:
+.L67:
 	ldr	r3, [r7, #4]
 	cmp	r3, #4
-	ble	.L61
+	ble	.L69
 	nop
 	nop
 	adds	r7, r7, #12
@@ -865,9 +917,9 @@ unblock_tasks:
 	@ sp needed
 	pop	{r7}
 	bx	lr
-.L63:
+.L71:
 	.align	2
-.L62:
+.L70:
 	.word	user_tasks
 	.word	g_tick_count
 	.size	unblock_tasks, .-unblock_tasks
@@ -883,7 +935,7 @@ SysTick_Handler:
 	push	{r7, lr}
 	sub	sp, sp, #8
 	add	r7, sp, #0
-	ldr	r3, .L65
+	ldr	r3, .L73
 	str	r3, [r7, #4]
 	bl	update_global_tick_count
 	bl	unblock_tasks
@@ -897,11 +949,16 @@ SysTick_Handler:
 	mov	sp, r7
 	@ sp needed
 	pop	{r7, pc}
-.L66:
+.L74:
 	.align	2
-.L65:
+.L73:
 	.word	-536810236
 	.size	SysTick_Handler, .-SysTick_Handler
+	.section	.rodata
+	.align	2
+.LC5:
+	.ascii	"Exception : Hardfault\000"
+	.text
 	.align	1
 	.global	HardFault_Handler
 	.syntax unified
@@ -911,13 +968,23 @@ SysTick_Handler:
 HardFault_Handler:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
-	@ link register save eliminated.
-	push	{r7}
+	push	{r7, lr}
 	add	r7, sp, #0
-.L68:
+	ldr	r0, .L77
+	bl	puts
+.L76:
 	nop
-	b	.L68
+	b	.L76
+.L78:
+	.align	2
+.L77:
+	.word	.LC5
 	.size	HardFault_Handler, .-HardFault_Handler
+	.section	.rodata
+	.align	2
+.LC6:
+	.ascii	"Exception : MemManage\000"
+	.text
 	.align	1
 	.global	MemManage_Handler
 	.syntax unified
@@ -927,13 +994,23 @@ HardFault_Handler:
 MemManage_Handler:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
-	@ link register save eliminated.
-	push	{r7}
+	push	{r7, lr}
 	add	r7, sp, #0
-.L70:
+	ldr	r0, .L81
+	bl	puts
+.L80:
 	nop
-	b	.L70
+	b	.L80
+.L82:
+	.align	2
+.L81:
+	.word	.LC6
 	.size	MemManage_Handler, .-MemManage_Handler
+	.section	.rodata
+	.align	2
+.LC7:
+	.ascii	"Exception : BusFault\000"
+	.text
 	.align	1
 	.global	BusFault_Handler
 	.syntax unified
@@ -943,11 +1020,16 @@ MemManage_Handler:
 BusFault_Handler:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
-	@ link register save eliminated.
-	push	{r7}
+	push	{r7, lr}
 	add	r7, sp, #0
-.L72:
+	ldr	r0, .L85
+	bl	puts
+.L84:
 	nop
-	b	.L72
+	b	.L84
+.L86:
+	.align	2
+.L85:
+	.word	.LC7
 	.size	BusFault_Handler, .-BusFault_Handler
 	.ident	"GCC: (Arm GNU Toolchain 13.3.Rel1 (Build arm-13.24)) 13.3.1 20240614"
