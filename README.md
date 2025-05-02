@@ -411,7 +411,7 @@ monitor rbp address
 - Exit GDB:
 
 ```bash
-quit
+quit # or exit
 ```
 
 These commands allow you to fully control program execution, set breakpoints, read memory, and debug issues. More commands here: [OpenOCD General Commands](https://openocd.org/doc/html/General-Commands.html)

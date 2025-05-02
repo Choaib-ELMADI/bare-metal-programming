@@ -351,6 +351,7 @@ LOAD C:/arm-gnu-toolchain-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.3.1/thum
                 0x08001844       0x24 C:/arm-gnu-toolchain-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.3.1/thumb/v7e-m/nofp/crtend.o
                 0x08001868                        . = ALIGN (0x4)
                 0x08001868                        _etext = .
+                0x08001874                        _la_data = LOADADDR (.data)
 
 .glue_7         0x08001868        0x0
  .glue_7        0x08001868        0x0 linker stubs

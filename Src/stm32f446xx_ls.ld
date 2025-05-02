@@ -24,6 +24,8 @@ SECTIONS
         _etext = .;
     } > FLASH /* Virtual Memory Address AT> Load Memory Address */
 
+    _la_data = LOADADDR(.data);
+
     .data :
     {
         _sdata = .;
