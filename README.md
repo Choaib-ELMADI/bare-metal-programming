@@ -6,6 +6,13 @@
 
 In this project, I am using the **STM32 Nucleo-F446RE** development board. Throughout the examples and experiments, I will work with this board to write, build, and flash programs directly into its microcontroller.
 
+The repository is structured with two main folders:
+
+- `Src/`: Contains small learning examples and experiments created while exploring bare metal concepts step by step.
+- `Main/`: Contains the actual project files.
+
+The main project goal is to **blink the onboard LEDs LED2 and LED3** on the STM32 Nucleo board using bare metal programming, without relying on any high-level libraries or HAL code. This involves directly controlling the GPIO registers of the STM32F446RE microcontroller.
+
 ## C Programs Compilation Process
 
 When we write a C program for a microcontroller, it goes through several steps before it can actually run on the hardware. This process includes compiling the code, assembling it, linking it into an executable, and finally flashing it onto the microcontroller.
