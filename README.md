@@ -159,7 +159,7 @@ make
 
 Will automatically compile `main.c` into `main.o` based on the rules you defined!
 
-> Note: This is just the initial Makefile with one basic rule. More useful commands (called targets) will be added as we progress through the project.
+> Note: This is just the initial Makefile with one basic rule. More useful commands (called targets) will be added as we progress through the project. [Check Final Makefile Here!](#final-makefile)
 
 If you want to dive deeper into build systems like Makefiles, CMake, and how projects are organized and automated, check out this repository: [Getting Started with CMake](https://github.com/Choaib-ELMADI/getting-started-with-cmake)
 
@@ -466,3 +466,51 @@ Now, any output from functions like `printf()` will appear directly in the OpenO
 ```bash
 monitor shutdown
 ```
+
+## Final Makefile
+
+Here is the final `Makefile` used in this project:
+
+```Makefile
+CC = arm-none-eabi-gcc
+MACH = cortex-m4
+CFLAGS = -c -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0
+CSFLAGS = -S -mcpu=$(MACH) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0
+# LDFLAGS = -nostdlib -T stm32f446xx_ls.ld -Wl,-Map=final.map
+LDFLAGS = -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=nano.specs -T stm32f446xx_ls.ld -Wl,-Map=final.map
+LDFLAGS_SH = -mcpu=$(MACH) -mthumb -mfloat-abi=soft --specs=rdimon.specs -T stm32f446xx_ls.ld -Wl,-Map=final.map
+
+all: main.s main.o led.o stm32f446xx_startup.o syscalls.o final.elf
+
+# sh = SEMIHOSTING
+sh: main.s main.o led.o stm32f446xx_startup.o final_sh.elf
+
+main.s: main.c
+	$(CC) $(CSFLAGS) $^ -o $@
+
+main.o: main.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+led.o: led.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+stm32f446xx_startup.o: stm32f446xx_startup.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+syscalls.o: syscalls.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+final.elf: main.o led.o stm32f446xx_startup.o syscalls.o
+	$(CC) $(LDFLAGS) $^ -o $@
+
+final_sh.elf: main.o led.o stm32f446xx_startup.o
+	$(CC) $(LDFLAGS_SH) $^ -o $@
+
+clean:
+	clear; rm -r *.s *.o *.elf *.map
+
+load:
+	openocd -f board/st_nucleo_f4.cfg
+```
+
+Happy learning and happy building!
