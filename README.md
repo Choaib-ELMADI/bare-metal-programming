@@ -1,4 +1,4 @@
-[![Choaib ELMADI - Bare Metal Programming](https://img.shields.io/badge/Choaib_ELMADI-Bare_Metal_Programming-8800dd)](https://elmadichoaib.vercel.app) ![Status - Learning](https://img.shields.io/badge/Status-Learning-2bd729) ![Platform - STM32](https://img.shields.io/badge/Platform-STM32-f7d620)
+[![Choaib ELMADI - Bare Metal Programming](https://img.shields.io/badge/Choaib_ELMADI-Bare_Metal_Programming-8800dd)](https://elmadichoaib.vercel.app) ![Status - Learning](https://img.shields.io/badge/Status-Learning-2bd729) ![Platform - STM32](https://img.shields.io/badge/Platform-STM32-f7d620) [![Credit - Fastbit Embedded Brain Academy](https://img.shields.io/badge/Credit-Fastbit_Embedded_Brain_Academy-3b8af2)](https://www.youtube.com/@FastbitEmbeddedBrainAcademy)
 
 # Bare Metal Programming
 
