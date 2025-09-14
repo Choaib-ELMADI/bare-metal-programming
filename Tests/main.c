@@ -3,8 +3,8 @@
 
 #define x (5)
 
-int main() {
+void main(void) {
     int y = x;
-    return 0;
+    return;
 }
 

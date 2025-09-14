@@ -1,3 +1,8 @@
 arm-none-eabi-gcc -E main.c -o main.i       --> Stop compilation right after preprocessing (.i file is the translation unit)
 arm-none-eabi-gcc -S main.c -o main.s       --> Stop compilation right after generating assembly code
 arm-none-eabi-gcc -c main.c -o main.o       --> Generate relocatables object files without linking them
+
+arm-none-eabi-objdump -h main.o             --> Display .o file section headers
+arm-none-eabi-objdump -d main.o             --> Display disassembly of executable sections
+arm-none-eabi-objdump -D main.o             --> Display disassembly of all sections
+arm-none-eabi-objdump -s main.o             --> Display the content of all sections
