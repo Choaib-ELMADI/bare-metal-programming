@@ -11,22 +11,22 @@ __max_stack_size = 0x200;
 
 SECTIONS
 {
-    .text:
+    .text :
     {
-        .vector_table
+        *(.vector_table)
         *(.text)
         *(.rodata)
         _etext = .;
     } > FLASH
 
-    .data:
+    .data :
     {
         _sdata = .;
         *(.data)
         _edata = .;
     } > SRAM AT > FLASH
 
-    .bss:
+    .bss :
     {
         _sbss = .;
         *(.bss)

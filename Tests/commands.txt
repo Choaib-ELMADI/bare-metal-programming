@@ -6,3 +6,5 @@ arm-none-eabi-objdump -h main.o             --> Display .o file section headers
 arm-none-eabi-objdump -d main.o             --> Display disassembly of executable sections
 arm-none-eabi-objdump -D main.o             --> Display disassembly of all sections
 arm-none-eabi-objdump -s main.o             --> Display the content of all sections
+
+arm-none-eabi-gcc -T stm32f446xx_ls.ld -nostdlib *.o -o main.elf
