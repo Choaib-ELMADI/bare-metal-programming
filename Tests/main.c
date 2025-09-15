@@ -1,7 +1,9 @@
 /* This is a first comment */
 // This is a second comment
 
-#define x (5)
+#define x 5
+
+void HardFault_Handler(void) {}
 
 int main(void) {
     int y = x;
@@ -9,4 +11,3 @@ int main(void) {
 
     return 0;
 }
-
