@@ -1,0 +1,81 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x08000000         0x00080000         xr
+SRAM             0x20000000         0x00020000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD main.o
+LOAD stm32f446xx_startup.o
+                0x00000400                        __max_heap_size = 0x400
+                0x00000200                        __max_stack_size = 0x200
+
+.text           0x08000000      0x200
+ *(.vector_table)
+ .vector_table  0x08000000      0x1b8 stm32f446xx_startup.o
+                0x08000000                vector_table
+ *(.text)
+ .text          0x080001b8       0x28 main.o
+                0x080001b8                HardFault_Handler
+                0x080001c4                main
+ .text          0x080001e0       0x20 stm32f446xx_startup.o
+                0x080001e0                Reset_Handler
+                0x080001ec                NMI_Handler
+                0x080001f8                MemManage_Handler
+                0x080001f8                Default_Handler
+ *(.rodata)
+                0x08000200                        _etext = .
+
+.glue_7         0x08000200        0x0
+ .glue_7        0x08000200        0x0 linker stubs
+
+.glue_7t        0x08000200        0x0
+ .glue_7t       0x08000200        0x0 linker stubs
+
+.vfp11_veneer   0x08000200        0x0
+ .vfp11_veneer  0x08000200        0x0 linker stubs
+
+.v4_bx          0x08000200        0x0
+ .v4_bx         0x08000200        0x0 linker stubs
+
+.iplt           0x08000200        0x0
+ .iplt          0x08000200        0x0 stm32f446xx_startup.o
+
+.rel.dyn        0x08000200        0x0
+ .rel.iplt      0x08000200        0x0 stm32f446xx_startup.o
+
+.data           0x20000000        0x0 load address 0x08000200
+                0x20000000                        _sdata = .
+ *(.data)
+ .data          0x20000000        0x0 main.o
+ .data          0x20000000        0x0 stm32f446xx_startup.o
+                0x20000000                        _edata = .
+
+.igot.plt       0x20000000        0x0 load address 0x08000200
+ .igot.plt      0x20000000        0x0 stm32f446xx_startup.o
+
+.bss            0x20000000        0x0 load address 0x08000200
+                0x20000000                        _sbss = .
+ *(.bss)
+ .bss           0x20000000        0x0 main.o
+ .bss           0x20000000        0x0 stm32f446xx_startup.o
+                0x20000000                        _ebss = .
+OUTPUT(main.elf elf32-littlearm)
+LOAD linker stubs
+
+.comment        0x00000000       0x45
+ .comment       0x00000000       0x45 main.o
+                                 0x46 (size before relaxing)
+ .comment       0x00000045       0x46 stm32f446xx_startup.o
+
+.ARM.attributes
+                0x00000000       0x2e
+ .ARM.attributes
+                0x00000000       0x2e main.o
+ .ARM.attributes
+                0x0000002e       0x2e stm32f446xx_startup.o
