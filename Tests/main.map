@@ -15,7 +15,7 @@ LOAD stm32f446xx_startup.o
                 0x00000400                        __max_heap_size = 0x400
                 0x00000200                        __max_stack_size = 0x200
 
-.text           0x08000000      0x208
+.text           0x08000000      0x280
  *(.vector_table)
  .vector_table  0x08000000      0x1b8 stm32f446xx_startup.o
                 0x08000000                vector_table
@@ -23,38 +23,38 @@ LOAD stm32f446xx_startup.o
  .text          0x080001b8       0x28 main.o
                 0x080001b8                HardFault_Handler
                 0x080001c4                main
- .text          0x080001e0       0x20 stm32f446xx_startup.o
+ .text          0x080001e0       0x98 stm32f446xx_startup.o
                 0x080001e0                Reset_Handler
-                0x080001ec                NMI_Handler
-                0x080001f8                MemManage_Handler
-                0x080001f8                Default_Handler
+                0x08000264                NMI_Handler
+                0x08000270                MemManage_Handler
+                0x08000270                Default_Handler
  *(.rodata)
- .rodata        0x08000200        0x5 main.o
-                0x08000200                var
-                0x08000204                b
-                0x08000208                        . = ALIGN (0x4)
- *fill*         0x08000205        0x3 
-                0x08000208                        _etext = .
+ .rodata        0x08000278        0x5 main.o
+                0x08000278                var
+                0x0800027c                b
+                0x08000280                        . = ALIGN (0x4)
+ *fill*         0x0800027d        0x3 
+                0x08000280                        _etext = .
 
-.glue_7         0x08000208        0x0
- .glue_7        0x08000208        0x0 linker stubs
+.glue_7         0x08000280        0x0
+ .glue_7        0x08000280        0x0 linker stubs
 
-.glue_7t        0x08000208        0x0
- .glue_7t       0x08000208        0x0 linker stubs
+.glue_7t        0x08000280        0x0
+ .glue_7t       0x08000280        0x0 linker stubs
 
-.vfp11_veneer   0x08000208        0x0
- .vfp11_veneer  0x08000208        0x0 linker stubs
+.vfp11_veneer   0x08000280        0x0
+ .vfp11_veneer  0x08000280        0x0 linker stubs
 
-.v4_bx          0x08000208        0x0
- .v4_bx         0x08000208        0x0 linker stubs
+.v4_bx          0x08000280        0x0
+ .v4_bx         0x08000280        0x0 linker stubs
 
-.iplt           0x08000208        0x0
- .iplt          0x08000208        0x0 stm32f446xx_startup.o
+.iplt           0x08000280        0x0
+ .iplt          0x08000280        0x0 stm32f446xx_startup.o
 
-.rel.dyn        0x08000208        0x0
- .rel.iplt      0x08000208        0x0 stm32f446xx_startup.o
+.rel.dyn        0x08000280        0x0
+ .rel.iplt      0x08000280        0x0 stm32f446xx_startup.o
 
-.data           0x20000000        0x4 load address 0x08000208
+.data           0x20000000        0x4 load address 0x08000280
                 0x20000000                        _sdata = .
  *(.data)
  .data          0x20000000        0x4 main.o
@@ -63,10 +63,10 @@ LOAD stm32f446xx_startup.o
                 0x20000004                        . = ALIGN (0x4)
                 0x20000004                        _edata = .
 
-.igot.plt       0x20000004        0x0 load address 0x0800020c
+.igot.plt       0x20000004        0x0 load address 0x08000284
  .igot.plt      0x20000004        0x0 stm32f446xx_startup.o
 
-.bss            0x20000004       0x1c load address 0x0800020c
+.bss            0x20000004       0x1c load address 0x08000284
                 0x20000004                        _sbss = .
  *(.bss)
  .bss           0x20000004       0x1c main.o

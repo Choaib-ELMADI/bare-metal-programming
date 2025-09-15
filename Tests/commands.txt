@@ -9,3 +9,5 @@ arm-none-eabi-objdump -s main.o             --> Display the content of all secti
 
 arm-none-eabi-gcc -T stm32f446xx_ls.ld -nostdlib *.o -o main.elf
 arm-none-eabi-gcc -T stm32f446xx_ls.ld -nostdlib -Wl,-Map=main.map *.o -o main.elf
+
+arm-none-eabi-nm main.elf                   --> Display symbol table

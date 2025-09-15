@@ -6,6 +6,12 @@
 
 #define STACK_START SRAM_END
 
+extern uint32_t _etext;
+extern uint32_t _sdata, _edata;
+extern uint32_t _sbss, _ebss;
+
+int main(void);
+
 void Reset_Handler(void);
 void NMI_Handler(void);
 void HardFault_Handler(void) __attribute__ ((weak, alias ("Default_Handler")));
@@ -24,12 +30,26 @@ uint32_t vector_table[110] __attribute__ ((section (".vector_table"))) = {
 
 void Reset_Handler(void) {
     // Copy .data section into SRAM
+    uint32_t size = (uint32_t)&_edata - (uint32_t)&_sdata;
+    uint8_t *pDst = (uint8_t *)&_sdata; // SRAM
+    uint8_t *pSrc = (uint8_t *)&_etext; // FLASH
+
+    for (uint32_t i=0; i<size; ++i) {
+        *pDst++ = *pSrc++;
+    }
 
     // Initialize .bss section with 0 in SRAM
+    size = (uint32_t)&_ebss - (uint32_t)&_sbss;
+    pDst = (uint8_t *)&_sbss;
+
+    for (uint32_t i=0; i<size; ++i) {
+        *pDst++ = 0;
+    }
 
     // Initialize standard libraries
 
     // Call 'main()'
+    main();
 }
 
 void NMI_Handler(void) {}
