@@ -12,5 +12,11 @@ main.o: main.c
 stm32f446xx_startup.o: stm32f446xx_startup.c
 	$(CC) $(CCFLAGS) $^ -o $@
 
+openocd:
+	openocd -f board/st_nucleo_f4.cfg
+
+gdb:
+	arm-none-eabi-gdb
+
 clean:
 	rm *_log.txt *.i *.s *.o *.elf; clear;
