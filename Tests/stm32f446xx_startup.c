@@ -9,8 +9,10 @@
 extern uint32_t _etext;
 extern uint32_t _sdata, _edata;
 extern uint32_t _sbss, _ebss;
+extern uint32_t _data_load_address;
 
 int main(void);
+void __libc_init_array(void);
 
 void Reset_Handler(void);
 void NMI_Handler(void);
@@ -32,7 +34,7 @@ void Reset_Handler(void) {
     // Copy .data section into SRAM
     uint32_t size = (uint32_t)&_edata - (uint32_t)&_sdata;
     uint8_t *pDst = (uint8_t *)&_sdata; // SRAM
-    uint8_t *pSrc = (uint8_t *)&_etext; // FLASH
+    uint8_t *pSrc = (uint8_t *)&_data_load_address; // FLASH
 
     for (uint32_t i=0; i<size; ++i) {
         *pDst++ = *pSrc++;
@@ -47,6 +49,7 @@ void Reset_Handler(void) {
     }
 
     // Initialize standard libraries
+    __libc_init_array();
 
     // Call 'main()'
     main();

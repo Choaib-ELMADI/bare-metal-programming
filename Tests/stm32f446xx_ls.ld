@@ -16,11 +16,15 @@ SECTIONS
         *(.vector_table)
         *(.text)
         *(.text.*)
+        *(.init)
+        *(.fini)
         *(.rodata)
         *(.rodata.*)
         . = ALIGN(4);
         _etext = .;
     } > FLASH
+
+    _data_load_address = LOADADDR(.data);
 
     .data :
     {
