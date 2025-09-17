@@ -22,6 +22,7 @@ SECTIONS
         *(.rodata.*)
         . = ALIGN(4);
         _etext = .;
+        __end__ = _etext;
     } > FLASH
 
     _data_load_address = LOADADDR(.data);
